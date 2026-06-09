@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Holiday Planner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="app">
+
+    <div class="page active" id="homePage">
+      <h1>🌴 Holiday</h1>
+    <div class="toggle">
+  <button id="firstBtn" class="active">1st Place</button>
+  <button id="secondBtn">2nd Place</button>
+</div>
+
+<div id="days"></div>
+    </div>
+
+    <div class="page" id="infoPage">
+      <h1>ℹ️ Info</h1>
+      <div class="info">
+        <p>Flight details, hotel info, contacts, etc.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- bottom nav -->
+  <div class="tab-bar">
+    <button onclick="showPage('homePage')">🏠</button>
+    <button onclick="showPage('infoPage')">ℹ️</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
