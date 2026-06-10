@@ -114,6 +114,17 @@ function render(itinerary) {
   });
 
   setTimeout(() => {
+  const todayCard = document.querySelector(".card.today");
+
+  if (todayCard) {
+      todayCard.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+  }, 300);
+
+  setTimeout(() => {
   const el = document.querySelector(".card.today");
   if (el) {
     el.scrollIntoView({ behavior: "smooth", block: "center" });
