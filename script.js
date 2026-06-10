@@ -126,6 +126,18 @@ function render(itinerary) {
 
     container.appendChild(card);
   });
+
+  setTimeout(() => {
+  const el = document.querySelector(".card.today");
+
+  if (el) {
+    el.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+}, 300);
+
 }
 
 loadAll();
