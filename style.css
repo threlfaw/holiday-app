@@ -5,6 +5,22 @@ body {
   color: white;
 }
 
+.hero {
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 32px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.hero p {
+  margin-top: 6px;
+  color: #94a3b8;
+  font-size: 15px;
+}
+
 /* APP CONTAINER */
 .app {
   max-width: 500px;
@@ -23,6 +39,31 @@ body {
   display: block;
 }
 
+.date-line {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.card-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.card-content li {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+}
+
+.chevron {
+  transition: transform 0.3s ease;
+}
+
+.card.open .chevron {
+  transform: rotate(90deg);
+}
+
 @keyframes fade {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -36,13 +77,35 @@ h1 {
 
 /* CARD */
 .card {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px;
-  margin-bottom: 12px;
+  border-radius: 22px;
+  margin-bottom: 14px;
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  transition: transform 0.2s ease;
+
+  backdrop-filter: blur(20px);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
+  animation: cardIn 0.4s ease;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card:active {
+  transform: scale(0.97);
 }
 
 .card:active {

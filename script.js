@@ -70,9 +70,11 @@ function render(itinerary) {
       <div class="card-header">
         <div>
           <div class="day-title">${item.day}</div>
-          <div>${item.weekday || ""} ${item.date || ""}</div>
+          <div class="date-line">
+            ${item.weekday || ""} • ${item.date || ""}
+          </div>
         </div>
-        <div>›</div>
+        <div class="chevron">›</div>
       </div>
 
       <div class="card-content">
