@@ -1,42 +1,25 @@
-const GROUP_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrOrx9JCZmqS8XhlDz2ueR2ewAaPBGFwrfg_LLccxcW_pqREW8OiHzHupgn8RSpz1HHCia6RFZ0d-t/pub?gid=0&single=true&output=csv";
-const FIRST_PLACE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrOrx9JCZmqS8XhlDz2ueR2ewAaPBGFwrfg_LLccxcW_pqREW8OiHzHupgn8RSpz1HHCia6RFZ0d-t/pub?gid=1076669321&single=true&output=csv";
-const SECOND_PLACE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrOrx9JCZmqS8XhlDz2ueR2ewAaPBGFwrfg_LLccxcW_pqREW8OiHzHupgn8RSpz1HHCia6RFZ0d-t/pub?gid=557909970&single=true&output=csv";
+const GROUP_URL = "YOUR_GROUP_CSV_URL";
+const FIRST_PLACE_URL = "YOUR_FIRST_PLACE_CSV_URL";
+const SECOND_PLACE_URL = "YOUR_SECOND_PLACE_CSV_URL";
 
 let selectedOutcome = "first";
 
 const container = document.getElementById("days");
 
-const firstBtn = document.getElementById("firstBtn");
-const secondBtn = document.getElementById("secondBtn");
-
-firstBtn.addEventListener("click", () => {
-  selectedOutcome = "first";
-  setActive();
-  loadAll();
-});
-
-secondBtn.addEventListener("click", () => {
-  selectedOutcome = "second";
-  setActive();
-  loadAll();
-});
-
-function setActive() {
-  firstBtn.classList.toggle("active", selectedOutcome === "first");
-  secondBtn.classList.toggle("active", selectedOutcome === "second");
+function toKey(dateStr) {
+  const parts = (dateStr || "").trim().split("/");
+  if (parts.length !== 3) return "";
+  const [d, m, y] = parts;
+  return `${y}-${m}-${d}`;
 }
 
-async function loadAll() {
-  const groupData = await fetchSheet(GROUP_URL);
-
-  const outcomeURL =
-    selectedOutcome === "first"
-      ? FIRST_PLACE_URL
-      : SECOND_PLACE_URL;
-
-  const outcomeData = await fetchSheet(outcomeURL);
-
-  render([...groupData, ...outcomeData]);
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${
+    String(d.getMonth() + 1).padStart(2, "0")
+  }-${
+    String(d.getDate()).padStart(2, "0")
+  }`;
 }
 
 async function fetchSheet(url) {
@@ -47,32 +30,38 @@ async function fetchSheet(url) {
     .trim()
     .split("\n")
     .slice(1)
-    .map(row => row.split(","))
-    .filter(cols => cols[0] && cols[0].trim() !== "")
-    .map(cols => ({
-      day: cols[0]?.trim(),
-      date: cols[1]?.trim(),
-      weekday: cols[2]?.trim(),
-      accommodation: cols[3]?.trim(),
-      travel: cols[4]?.trim(),
-      activities: cols[5]?.trim(),
-      destination: cols[6]?.trim()
+    .map(r => r.split(","))
+    .filter(c => c[0] && c[0].trim())
+    .map(c => ({
+      day: c[0]?.trim(),
+      date: c[1]?.trim(),
+      weekday: c[2]?.trim(),
+      accommodation: c[3]?.trim(),
+      travel: c[4]?.trim(),
+      activities: c[5]?.trim(),
+      destination: c[6]?.trim()
     }));
+}
+
+async function loadAll() {
+  const group = await fetchSheet(GROUP_URL);
+
+  const url =
+    selectedOutcome === "first"
+      ? FIRST_PLACE_URL
+      : SECOND_PLACE_URL;
+
+  const outcome = await fetchSheet(url);
+
+  render([...group, ...outcome]);
 }
 
 function render(itinerary) {
   container.innerHTML = "";
 
-  const now = new Date();
-  const today =
-    `${now.getFullYear()}-${
-      String(now.getMonth() + 1).padStart(2, "0")
-    }-${
-      String(now.getDate()).padStart(2, "0")
-    }`;
+  const today = getTodayKey();
 
   itinerary.forEach(item => {
-
     const isToday = toKey(item.date) === today;
 
     const card = document.createElement("div");
@@ -82,9 +71,9 @@ function render(itinerary) {
       <div class="card-header">
         <div>
           <div class="day-title">${item.day}</div>
-          <div class="date-line">${item.weekday || ""} • ${item.date || ""}</div>
+          <div>${item.weekday || ""} ${item.date || ""}</div>
         </div>
-        <div class="chevron">›</div>
+        <div>›</div>
       </div>
 
       <div class="card-content">
@@ -104,56 +93,32 @@ function render(itinerary) {
             .join("")}
         </div>
 
+        ${item.destination ? `
+          <div class="map-link">
+            🗺️ <span>View location</span>
+          </div>
+        ` : ""}
+
       </div>
-
-      ${item.destination ? `
-      <a
-        class="map-button"
-        href="https://maps.apple.com/?q=${encodeURIComponent(item.destination)}"
-        target="_blank"
-      >
-        🗺️ Open in Maps
-      </a>
-  ` : ""}
-
     `;
 
     card.querySelector(".card-header").addEventListener("click", () => {
       card.classList.toggle("open");
     });
 
-    container.appendChild(card);
-  });
+    const mapLink = card.querySelector(".map-link");
 
-  setTimeout(() => {
-  const todayCard = document.querySelector(".card.today");
-
-  if (todayCard) {
-      todayCard.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
+    if (mapLink) {
+      mapLink.addEventListener("click", () => {
+        window.open(
+          `https://maps.apple.com/?q=${encodeURIComponent(item.destination)}`,
+          "_blank"
+        );
       });
     }
-  }, 300);
 
-  setTimeout(() => {
-  const el = document.querySelector(".card.today");
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
-  }
-}, 200);
-}
-
-function showPage(pageId) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById(pageId).classList.add("active");
+    container.appendChild(card);
+  });
 }
 
 loadAll();
-
-function toKey(dateStr) {
-  if (!dateStr) return "";
-
-  const [d, m, y] = dateStr.trim().split("/");
-  return `${y}-${m}-${d}`;
-}
