@@ -62,35 +62,48 @@ async function fetchSheet(url) {
 function render(itinerary) {
   container.innerHTML = "";
 
+  const now = new Date();
+  const today =
+    `${now.getFullYear()}-${
+      String(now.getMonth() + 1).padStart(2, "0")
+    }-${
+      String(now.getDate()).padStart(2, "0")
+    }`;
+
   itinerary.forEach(item => {
+
+    const isToday = toKey(item.date) === today;
+
     const card = document.createElement("div");
-    card.className = "card";
+    card.className = "card" + (isToday ? " today" : "");
 
     card.innerHTML = `
       <div class="card-header">
         <div>
           <div class="day-title">${item.day}</div>
-          <div class="date-line">
-            ${item.weekday || ""} • ${item.date || ""}
-          </div>
+          <div class="date-line">${item.weekday || ""} • ${item.date || ""}</div>
         </div>
         <div class="chevron">›</div>
       </div>
 
       <div class="card-content">
-        <p>🏠 ${item.accommodation || "Not specified"}</p>
-        <p>✈️ ${item.travel || "No travel planned"}</p>
 
-      <p><strong>🎯 Activities</strong></p>
+        <p><strong>🏠 Accommodation</strong><br>${item.accommodation || ""}</p>
 
-      <ul>
-        ${(item.activities || "")
-          .split(";")
-          .map(a => a.trim())
-          .filter(a => a)
-          .map(a => `<li>📍 ${a}</li>`)
-          .join("")}
-      </ul>
+        <p><strong>✈️ Travel</strong><br>${item.travel || ""}</p>
+
+        <p><strong>🎯 Activities</strong></p>
+
+        <div class="activities">
+          ${(item.activities || "")
+            .split(";")
+            .map(a => a.trim())
+            .filter(Boolean)
+            .map(a => `<div class="activity-pill">📍 ${a}</div>`)
+            .join("")}
+        </div>
+
+      </div>
     `;
 
     card.querySelector(".card-header").addEventListener("click", () => {
@@ -99,6 +112,13 @@ function render(itinerary) {
 
     container.appendChild(card);
   });
+
+  setTimeout(() => {
+  const el = document.querySelector(".card.today");
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}, 200);
 }
 
 function showPage(pageId) {
@@ -107,3 +127,10 @@ function showPage(pageId) {
 }
 
 loadAll();
+
+function toKey(dateStr) {
+  if (!dateStr) return "";
+
+  const [d, m, y] = dateStr.trim().split("/");
+  return `${y}-${m}-${d}`;
+}
