@@ -1,6 +1,7 @@
-const GROUP_URL = "YOUR_GROUP_CSV_URL";
-const FIRST_PLACE_URL = "YOUR_FIRST_PLACE_CSV_URL";
-const SECOND_PLACE_URL = "YOUR_SECOND_PLACE_CSV_URL";
+const GROUP_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrOrx9JCZmqS8XhlDz2ueR2ewAaPBGFwrfg_LLccxcW_pqREW8OiHzHupgn8RSpz1HHCia6RFZ0d-t/pub?gid=0&single=true&output=csv";
+const FIRST_PLACE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrOrx9JCZmqS8XhlDz2ueR2ewAaPBGFwrfg_LLccxcW_pqREW8OiHzHupgn8RSpz1HHCia6RFZ0d-t/pub?gid=1076669321&single=true&output=csv";
+const SECOND_PLACE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrOrx9JCZmqS8XhlDz2ueR2ewAaPBGFwrfg_LLccxcW_pqREW8OiHzHupgn8RSpz1HHCia6RFZ0d-t/pub?gid=557909970&single=true&output=csv";
+
 
 let selectedOutcome = "first";
 
@@ -103,6 +104,12 @@ function render(itinerary) {
     `;
 
     card.querySelector(".card-header").addEventListener("click", () => {
+      // close all other cards
+      document.querySelectorAll(".card").forEach(c => {
+        if (c !== card) c.classList.remove("open");
+      });
+
+      // toggle current card
       card.classList.toggle("open");
     });
 
