@@ -294,3 +294,27 @@ h1 {
 .toggle button:active {
   transform: scale(0.97);
 }
+
+.map-button {
+  display: block;
+  margin-top: 14px;
+  padding: 12px;
+
+  text-align: center;
+  text-decoration: none;
+
+  border-radius: 14px;
+
+  background: rgba(59,130,246,0.2);
+  border: 1px solid rgba(59,130,246,0.4);
+
+  color: white;
+  font-weight: 600;
+
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.map-button:active {
+  transform: scale(0.98);
+  background: rgba(59,130,246,0.3);
+}

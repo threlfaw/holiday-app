@@ -55,7 +55,8 @@ async function fetchSheet(url) {
       weekday: cols[2]?.trim(),
       accommodation: cols[3]?.trim(),
       travel: cols[4]?.trim(),
-      activities: cols[5]?.trim()
+      activities: cols[5]?.trim(),
+      destination: cols[6]?.trim()
     }));
 }
 
@@ -104,6 +105,17 @@ function render(itinerary) {
         </div>
 
       </div>
+
+      ${item.destination ? `
+      <a
+        class="map-button"
+        href="https://maps.apple.com/?q=${encodeURIComponent(item.destination)}"
+        target="_blank"
+      >
+        🗺️ Open in Maps
+      </a>
+  ` : ""}
+
     `;
 
     card.querySelector(".card-header").addEventListener("click", () => {
